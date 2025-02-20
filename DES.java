@@ -1,25 +1,41 @@
-class DiffieHellman {
-    public static void main(String args[]) {
-    int p = 23; /* publicly known (prime number) */
-    int g = 5; /* publicly known (primitive root) */
-    int x = 4; /* only Alice knows this secret */
-    int y = 3; /* only Bob knows this secret */
-    double aliceSends = (Math.pow(g, x)) % p;
-    double bobComputes = (Math.pow(aliceSends, y)) % p;
-    double bobSends = (Math.pow(g, y)) % p;
-    double aliceComputes = (Math.pow(bobSends, x)) % p;
-    double sharedSecret = (Math.pow(g, (x * y))) % p;
-    System.out.println("simulation of Diffie-Hellman key exchange algorithm\n---------------------------------------------");
-    System.out.println("Alice Sends : " + aliceSends);
-    System.out.println("Bob Computes : " + bobComputes);
-    System.out.println("Bob Sends : " + bobSends);
-    System.out.println("Alice Computes : " + aliceComputes);
-    System.out.println("Shared Secret : " + sharedSecret);
-    /* shared secrets should match and equality is transitive */
-    if ((aliceComputes == sharedSecret) && (aliceComputes == bobComputes))
-    System.out.println("Success: Shared Secrets Matches! " + sharedSecret);
-    else
-    System.out.println("Error: Shared Secrets does not Match");
-    }
-   }
-   
+
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.KeyGenerator;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SecretKey;
+public class DES
+{
+public static void main(String[] argv) {
+try{
+ System.out.println("Message Encryption Using DES Algorithm\n-------");
+ KeyGenerator keygenerator = KeyGenerator.getInstance("DES");
+ SecretKey myDesKey = keygenerator.generateKey();
+ Cipher desCipher;
+ desCipher = Cipher.getInstance("DES/ECB/PKCS5Padding");
+ desCipher.init(Cipher.ENCRYPT_MODE, myDesKey);
+ byte[] text = "Secret Information ".getBytes();
+ System.out.println("Message [Byte Format] : " + text);
+ System.out.println("Message : " + new String(text));
+ byte[] textEncrypted = desCipher.doFinal(text);
+ System.out.println("Encrypted Message: " + textEncrypted);
+ desCipher.init(Cipher.DECRYPT_MODE, myDesKey);
+ byte[] textDecrypted = desCipher.doFinal(textEncrypted);
+ System.out.println("Decrypted Message: " + new
+String(textDecrypted));
+}catch(NoSuchAlgorithmException e){
+e.printStackTrace();
+}catch(NoSuchPaddingException e){
+e.printStackTrace();
+}catch(InvalidKeyException e){
+e.printStackTrace();
+}catch(IllegalBlockSizeException e){
+e.printStackTrace();
+}catch(BadPaddingException e){
+e.printStackTrace();
+}
+}
+}
